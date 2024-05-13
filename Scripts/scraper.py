@@ -1,6 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
-from googletrans import Translator
+import os
+import sys
+from google.cloud import translate_v2 as translate
+
+sys.path.append('../private') #private files
+from hidden import lf_service_1 #private files
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = lf_service_1
+translator = translate.Client()
 
 def getLinks():
     #Setup
@@ -31,30 +38,27 @@ def readArticle(url):
     response = requests.get(url)
     page = BeautifulSoup(response.content, 'html.parser')
     paragraphs = page.find_all('p')
-    title = page.find('h1')
+    title = page.find('h1').get_text().replace('\n','')
     text = ""
     for tag in paragraphs[0:-2]:
         if (tag.get('class') != None or tag.get('id') != None):
             continue
         text += tag.get_text()
-    lang1 = []
-    lang2 = []
-    translator = Translator()
+    text1 = []
+    text2 = []
+    
     for sentence in text.split('.'):
-        lang1.append(sentence)
-        print(sentence)
-        print(translator.translate(text=sentence, dest = "en", src="fr"))
-        
-    
-    
-    
+        text1.append(sentence)
+        text2.append(translator.translate(sentence, target_language='en')['translatedText'])
+    return {
+        'title' : title,
+        'lang1' : 'french',
+        'lang2' : 'english',
+        'text1' : text1,
+        'text2' : text2,
+        'link' : url
+    }
 
 links = getLinks()
-readArticle(links[-1])
-print(links[-1])
+print(readArticle(links[0]))
 
-#Next Steps
-# - open link, find main text, split by sentence
-# - get article info (url, author, title, sentence list, language)
-# - 
-# - 
