@@ -1,17 +1,22 @@
 import sys
-import os
-from google.cloud import translate_v2 as translate
 sys.path.append('../private')
-from hidden import lf_service_1
+from hidden import uri
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = lf_service_1
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
-# Initialize the translator
-translator = translate.Client()
 
-testVal = 'Je suis un chat noir'
-# Translate the text
-translated = translator.translate(testVal, target_language='en')
+# Create a new client and connect to the server
+mango = MongoClient(uri, server_api=ServerApi('1'))
 
-print(translated)
+# Send a ping to confirm a successful connection
+try:
+    mango.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
+url = "https://information.tv5monde.com/terriennes/tribune-metoo-malgre-le-courage-des-victimes-cest-limpunite-qui-grandit-2721893"
+
+for x in mango['langDB']['Articles'].find({"link": url}):
+    print(x['link'])

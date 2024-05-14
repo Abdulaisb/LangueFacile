@@ -5,9 +5,14 @@ import sys
 from google.cloud import translate_v2 as translate
 
 sys.path.append('../private') #private files
-from hidden import lf_service_1 #private files
+from hidden import lf_service_1, uri #private files
+
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = lf_service_1
 translator = translate.Client()
+mango = MongoClient(uri, server_api=ServerApi('1'))
 
 def getLinks():
     #Setup
@@ -26,24 +31,34 @@ def getLinks():
             link = tag['href']
             linkList = link.split('-')
             #Filter links for only articles
-            #Consider filtering out "direct" links
             valid = linkList[-1].isdigit() and not ("video" in linkList[0] or "direct" in linkList[0])
             if valid: 
                 links.append(url+link)
-    return links
+    freshLinks = []
+    #Filers Duplicate Links
+    for link in links:
+        if len(list(mango['langDB']['Articles'].find({"link": link}))) != 0:
+            continue
+        freshLinks.append(link)            
+    return freshLinks
 
 def readArticle(url):
     #Setup
     session = requests.session()
     response = requests.get(url)
     page = BeautifulSoup(response.content, 'html.parser')
-    paragraphs = page.find_all('p')
+    #Article Title
     title = page.find('h1').get_text().replace('\n','')
+    #Article Text
     text = ""
+    paragraphs = page.find_all('p')
     for tag in paragraphs[0:-2]:
         if (tag.get('class') != None or tag.get('id') != None):
             continue
-        text += tag.get_text()
+        tagText = tag.get_text()
+        if tagText == " " or len(tagText) == 0:
+            continue
+        text += tagText
     text1 = []
     text2 = []
     
@@ -58,7 +73,23 @@ def readArticle(url):
         'text2' : text2,
         'link' : url
     }
+def scrape():
+    links = getLinks()
+    print('Fresh Links Found:' , len(links))
+    toInsert = []
+    for link in links:
+        article = readArticle(link)
+        print('Processed:', article['title'])
+        toInsert.append(article)
+    print('Articles Processed: ', len(toInsert))
+    return toInsert
+def insertDB(toInsert):    
+    database = mango['langDB']
+    collection = database['Articles']
+    if len(toInsert) != 0:
+        collection.insert_many(toInsert)
+        print('Articles Inserted!!')
+    else:
+        print('All links are duplicates!!')
 
-links = getLinks()
-print(readArticle(links[0]))
-
+insertDB(scrape())
