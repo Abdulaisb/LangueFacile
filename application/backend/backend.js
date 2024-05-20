@@ -1,22 +1,48 @@
 //Setup
 import express from "express";
 import { PORT, mongodbURL } from "./config.js";
-import mongoose from "mongoose";
+import {mongoose, Schema} from "mongoose";
+import cors from 'cors'
+
 const app = express();
-
-//Communication
-
+app.use(cors());
 
 //Listening
 app.listen(PORT, () => {
     console.log(`App is listening to port: ${PORT}`)
 })
-
+//Database Conenction
 mongoose
-    .connect(mongodbURL)
+    .connect(mongodbURL, {dbName: 'langDB'})
     .then(() => {
         console.log('App connected to database')
     })
     .catch((error) => {
         console.log(error)
-    })
+    });
+const Article = mongoose.model('Article', {
+    title: String,
+    lang1: String,
+    lang2: String,
+    text1: [String],
+    text2: [String],
+    link: String
+});
+//API
+app.get('/connect', async(req, res) =>
+{
+    console.log('Connect Function')
+    const msg = {'message':'Backend Connected'};
+    res.json(msg);
+});
+
+app.get('/article', async(req,res) => {
+    console.log('Article Function')
+    try {
+        const article = await Article.findOne({}).exec();
+        res.json(article);
+    }
+    catch(err) {
+        console.error(err)
+    }
+});

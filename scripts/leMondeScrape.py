@@ -37,7 +37,7 @@ def getLinks():
     freshLinks = []
     #Filers Duplicate Links
     for link in links:
-        if len(list(mango['langDB']['Articles'].find({"link": link}))) != 0:
+        if len(list(mango['langDB']['articles'].find({"link": link}))) != 0:
             continue
         freshLinks.append(link)            
     return freshLinks
@@ -85,7 +85,7 @@ def scrape():
     return toInsert
 def insertDB(toInsert):    
     database = mango['langDB']
-    collection = database['Articles']
+    collection = database['articles']
     if len(toInsert) != 0:
         collection.insert_many(toInsert)
         print('Articles Inserted!!')
