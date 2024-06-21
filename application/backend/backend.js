@@ -20,6 +20,7 @@ mongoose
     .catch((error) => {
         console.log(error)
     });
+//Article Model
 const Article = mongoose.model('Article', {
     title: String,
     lang1: String,
@@ -28,14 +29,14 @@ const Article = mongoose.model('Article', {
     text2: [String],
     link: String
 });
-//API
+//API connection verification
 app.get('/connect', async(req, res) =>
 {
     console.log('Connect Function')
     const msg = {'message':'Backend Connected'};
     res.json(msg);
 });
-
+//Gets first article in database
 app.get('/article', async(req,res) => {
     console.log('Article Function')
     try {
