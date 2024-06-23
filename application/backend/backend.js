@@ -47,3 +47,16 @@ app.get('/article', async(req,res) => {
         console.error(err)
     }
 });
+//Gets random article
+app.get('/random_article', async(req,res) => {
+    console.log('Random Function')
+    try {
+        let cnt = await Article.countDocuments();
+        let rand = Math.floor(Math.random()*cnt);
+        const article = await Article.findOne().skip(rand).exec();
+        res.json(article);
+    }
+    catch(err) {
+        console.error(err)
+    }
+});
