@@ -1,7 +1,7 @@
 //Setup
 import express from "express";
 import { PORT, mongodbURL } from "./config.js";
-import {mongoose, Schema} from "mongoose";
+import {mongoose} from "mongoose";
 import cors from 'cors'
 
 const app = express();
