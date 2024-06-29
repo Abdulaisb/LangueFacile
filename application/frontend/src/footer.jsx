@@ -6,7 +6,7 @@ const Footer = () => {
 
     return (
         <>
-            <div className='bg-black text-white text-center h-16 '>Footer</div>        
+            <div className='bg-black text-white text-center h-1/8 '>Footer</div>        
         </>
     )
 };

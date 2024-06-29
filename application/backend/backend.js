@@ -6,7 +6,8 @@ import cors from 'cors'
 
 const app = express();
 app.use(cors());
-
+// Middleware to parse JSON bodies
+app.use(express.json());
 //Listening
 app.listen(PORT, () => {
     console.log(`App is listening to port: ${PORT}`)
@@ -28,6 +29,13 @@ const Article = mongoose.model('Article', {
     text1: [String],
     text2: [String],
     link: String
+});
+//User Model
+const User = mongoose.model('User', {
+    username: String,
+    name: String,
+    password: String,
+    highlighting: [String]
 });
 //API connection verification
 app.get('/connect', async(req, res) =>
@@ -59,4 +67,44 @@ app.get('/random_article', async(req,res) => {
     catch(err) {
         console.error(err)
     }
+});
+//Handles Sign up
+app.put('/signup', async(req,res) => {
+    const {name, user, password} = req.body;
+    if (await User.findOne({'username': user}).exec() !== null) {
+        console.log('User already exists');
+        res.json('duplicate');
+    }
+    else if (name === '' || user == '' || password == '') {
+        res.json('invalid');
+    }
+    else {
+        const input = new User({
+            username : user,
+            name : name,
+            password : password,
+            highlighting : []
+        });
+        input.save();
+        res.json('good');
+    }    
+});
+//Handles Log In
+app.put('/login', async(req,res) => {
+    const {user, password} = req.body;
+    if (user === "" || password === "") {
+        res.json('invalid');
+    }
+    else {
+        const userData = await User.findOne({'username': user}).exec();
+        if (userData === null) {
+            res.json('not found');
+        }
+        else if (userData.password !== password) {
+            res.json('invalid password');
+        }
+        else {
+            res.json(userData);
+        }    
+    }    
 });
