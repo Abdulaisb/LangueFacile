@@ -35,7 +35,7 @@ def getLinks():
             if valid: 
                 links.append(url+link)
     freshLinks = []
-    #Filers Duplicate Links
+    #Filters Duplicate Links
     for link in links:
         if len(list(mango['langDB']['articles'].find({"link": link}))) != 0:
             continue
