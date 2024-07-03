@@ -23,6 +23,8 @@ const Reader = ({userData}) => {
   const [transOn, setTrans] = useState(false);
   //Highlight Tracker
   const [highlit, setHighlit] = useState([]);
+  //Article shelf
+  const [shelf, setShelf] = useState([]);
   //Loading
   const [loading, setLoading] = useState(true);
   //Whenever component is mounted
@@ -31,19 +33,30 @@ const Reader = ({userData}) => {
   }, []);
   //Generate Random Article
   const randomArticle = () => {
-    fetch(apiURL + '/random_article').then(
+    fetch(apiURL + '/random_article', {
+        method : 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username : userData.username})
+    }).then(
       res => res.json() 
     ).then(
       data => {
         //console.log('server message: ', data) 
-        setTitle(data.title);
-        setText1(data.text1);
-        setText2(data.text2);
-        setLang1(data.lang1);
-        setLang1(data.lang1);
-        setArticleURL(data.link);
-        setArticleID(data._id);
-        setHighlit(Array(text1.length).fill(false));
+        setTitle(data.article.title);
+        setText1(data.article.text1);
+        setText2(data.article.text2);
+        setLang1(data.article.lang1);
+        setLang1(data.article.lang2);
+        setArticleURL(data.article.link);
+        setArticleID(data.article._id);
+        let lighting = Array(text1.length).fill(false);
+        for (const idx of data.lit) {
+          lighting[idx] = true;
+        }
+        setHighlit(lighting);
+        updateShelf();
         setLoading(false);
       }
     )
@@ -58,12 +71,34 @@ const Reader = ({userData}) => {
       newState[idx] = !newState[idx];
       return newState;
     });
-    console.log(highlit);
   };
   const saveArticle = () => {
     //append current article id and list of highlit elements to userData
+    let lit = [];
+    for (let i = 0; i < highlit.length; i++) {
+      if (highlit[i]) {lit.push(i);}
+    }
+    const payload = {
+      username : userData.username,
+      articleID : articleID,
+      lit : lit
+    }  
+    fetch(apiURL + '/save_article', {
+        method : 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+    }).then(res => res.json()).then(updateShelf());
   };
-
+  const updateShelf = () => {
+    fetch(apiURL + '/saved_articles', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: userData.username})
+    }).then(res => res.json().then( data => {
+      setShelf((data));
+    }))
+    console.log('shelf: ', shelf)
+  };
   if (loading) {
       return (<div className='h-ah bg-gray-500'></div>)
   }
@@ -80,7 +115,7 @@ const Reader = ({userData}) => {
               <button onClick = {randomArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
                 New Article
               </button>
-              <button onClick = {randomArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
+              <button onClick = {saveArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
                 Save Article
               </button>
               <div>
@@ -115,9 +150,16 @@ const Reader = ({userData}) => {
               )}
             </div>    
           </div>
-            <div className='flex-none w-1/6 bg-gray-500 text-center '>
-                Right panel
-                {userData.name}
+            <div className='flex-none w-1/6 bg-gray-500 text-center overflow-auto'>
+                Shelf
+                <br></br>
+                Username: {userData.name}
+                <br></br>
+                {shelf.slice().reverse().map((art, index) => 
+                  <div>
+                    {art.title}
+                  </div>
+                )}
             </div>
       </div>      
     </>     

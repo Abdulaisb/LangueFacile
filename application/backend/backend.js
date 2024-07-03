@@ -1,9 +1,10 @@
 //Setup
 import express from "express";
 import { PORT, mongodbURL } from "./config.js";
-import {mongoose} from "mongoose";
+import mongoose from "mongoose";
 import cors from 'cors'
 
+const ObjectId = mongoose.Types.ObjectId;
 const app = express();
 app.use(cors());
 // Middleware to parse JSON bodies
@@ -35,7 +36,7 @@ const User = mongoose.model('User', {
     username: String,
     name: String,
     password: String,
-    highlighting: [String]
+    highlighting: [{id:String, lit:[Number]}]
 });
 //API connection verification
 app.get('/connect', async(req, res) =>
@@ -56,13 +57,21 @@ app.get('/article', async(req,res) => {
     }
 });
 //Gets random article
-app.get('/random_article', async(req,res) => {
-    console.log('Random Function')
+app.post('/random_article', async(req,res) => {
     try {
         let cnt = await Article.countDocuments();
         let rand = Math.floor(Math.random()*cnt);
         const article = await Article.findOne().skip(rand).exec();
-        res.json(article);
+        const {username} = req.body;
+        const user = await User.findOne({username:username}).exec();
+        let lighting = [];
+        for (const art of user.highlighting) {
+            if (((new ObjectId(art.id))).equals(article._id)) {
+                lighting = art.lit;
+                break;
+            } 
+        }
+        res.json({article: article, lit : lighting});
     }
     catch(err) {
         console.error(err)
@@ -107,4 +116,42 @@ app.put('/login', async(req,res) => {
             res.json(userData);
         }    
     }    
+});
+//Saves article
+app.put('/save_article', async(req,res) => {
+    const {username, articleID, lit} = req.body;
+    let user = await User.findOne({username : username}).exec();
+    let found = false;
+    for (let art of user.highlighting) {
+        if (art.id === articleID) {
+            //article found
+            found = true;
+            art.lit = lit;
+            break;
+        }
+    }
+    if (!found) {
+        await user.highlighting.push({id:articleID, lit: lit});
+    }
+    user.save();
+});
+//Deletes article
+app.put('/delete_article', async(req,res) => {
+    const {username, articleID, lit} = req.body;
+    let user = await User.findOne({username : username}).exec();
+    //TODO
+});
+//Gets a users saved articles
+app.post('/saved_articles', async(req,res) => {
+    const {username} = req.body;
+    const user = await User.findOne({username : username}).exec();
+    let payload = [];
+    for (const art of user.highlighting) {
+        const articleDoc = await Article.findById(art.id).exec();
+        payload.push({
+            title: articleDoc.title,
+            id: art.id
+        });
+    }
+    res.json(payload);
 });
