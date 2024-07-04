@@ -41,13 +41,11 @@ const User = mongoose.model('User', {
 //API connection verification
 app.get('/connect', async(req, res) =>
 {
-    console.log('Connect Function')
     const msg = {'message':'Backend Connected'};
     res.json(msg);
 });
 //Gets first article in database
 app.get('/article', async(req,res) => {
-    console.log('Article Function')
     try {
         const article = await Article.findOne({}).exec();
         res.json(article);
@@ -77,11 +75,24 @@ app.post('/random_article', async(req,res) => {
         console.error(err)
     }
 });
+//Sets specific article
+app.post('/set_article', async(req,res) => {
+    const {articleID, username} = req.body;
+    const article = await Article.findById(articleID).exec();
+    const user = await User.findOne({username:username}).exec();
+    let lighting = [];
+    for (const art of user.highlighting) {
+        if (((new ObjectId(art.id))).equals(article._id)) {
+            lighting = art.lit;
+            break;
+        } 
+    }
+    res.json({article: article, lit : lighting});
+});
 //Handles Sign up
 app.put('/signup', async(req,res) => {
     const {name, user, password} = req.body;
     if (await User.findOne({'username': user}).exec() !== null) {
-        console.log('User already exists');
         res.json('duplicate');
     }
     else if (name === '' || user == '' || password == '') {
@@ -133,7 +144,16 @@ app.put('/save_article', async(req,res) => {
     if (!found) {
         await user.highlighting.push({id:articleID, lit: lit});
     }
-    user.save();
+    await user.save();
+    res.json('article saved')
+});
+//Removes article from user's shelf
+app.put('/unsave_article', async(req,res) => {
+    const {username, articleID} = req.body;
+    let user = await User.findOne({username : username}).exec();
+    user.highlighting = user.highlighting.filter(item => item.id !== articleID);
+    await user.save();
+    res.json('article unsaved')
 });
 //Deletes article
 app.put('/delete_article', async(req,res) => {

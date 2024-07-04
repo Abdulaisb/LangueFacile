@@ -4,17 +4,19 @@ import SignUp from './signup';
 import Login from './login';
 
 const Auth  = ({setUserData}) => {
+    const [signup, setSignup] = useState(false);
+    const [msg,setMsg] = useState(null);
     useEffect( () => {
         setUserData(null);
     }, []);
     return (
         <div className='flex h-screen'>
-            <div className='flex-none w-full bg-gray-500 flex justify-center pt-20 space-x-20'>                
-                <SignUp setUserData = {setUserData}/>
-                <div className='text-white flex items-center justify-center w-60 h-80 text-8xl font-bold'>
-                    Or
-                </div>
-                <Login setUserData = {setUserData}/>
+            <div className='flex-none w-full bg-gray-500 flex justify-center pt-20'>                
+                <div className='flex flex-col items-center'>
+                    {(signup) && (<SignUp err = {setMsg} swap = {() => setSignup(false)} setUserData = {setUserData}/>)}                
+                    {(!signup) && (<Login err = {setMsg} swap = {() => setSignup(true)} setUserData = {setUserData}/>)}
+                    {(msg) && (<div className='pt-4 text-orange-600 font-bold text-3xl'>{msg}</div>)}   
+                </div>                 
             </div>            
         </div>
     )

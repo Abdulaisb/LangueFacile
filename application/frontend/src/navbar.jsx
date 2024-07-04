@@ -17,8 +17,13 @@ const Navbar = ({userData, setUserData}) => {
                     </Link>
                     
                 </div>
-                <div className='w-1/6 text-center flex flex-col justify-center'>
-                    {}
+                <div className='w-1/6 text-center flex justify-end items-center space-x-6 px-6'>
+                    <div className=''>
+                        {userData.name}
+                    </div>
+                    <div onClick = {() => setUserData(null)} className=' border-white border-2 rounded-lg h-5/6 w-20 bg-blue-700 hover:bg-blue-500 flex items-center justify-center cursor-pointer '>
+                        Logout
+                    </div>
                 </div>    
             </div>        
     )

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import {Route, Routes, Navigate} from 'react-router-dom'
 import { useState } from 'react';
-import Reader from './reader.jsx'
+import Reader from './reader.jsx';
 import Navbar  from './navbar.jsx';
 import './index.css';
 import Flashcards from './flashcards.jsx';
@@ -9,9 +9,6 @@ import Auth from './auth.jsx';
 
 const App = () => {
   const [userData, setUserData] = useState(null);
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
   //Prevents accessing site without logging in
   const renderAuthRoute = () => {
     if (!userData) {

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { apiURL } from './config';
 import { useNavigate } from 'react-router-dom';
-const SignUp = ({setUserData}) => {
+const SignUp = ({setUserData, swap, err}) => {
     const navigate = useNavigate();
     const [user,setUser] = useState("");
     const [pass,setPass] = useState("");
@@ -17,6 +17,7 @@ const SignUp = ({setUserData}) => {
         setName("");
         setUser("");
         setPass("");
+        err(null);
     };
 
     const submit = () => {
@@ -33,13 +34,12 @@ const SignUp = ({setUserData}) => {
             body: JSON.stringify(payload)
         }).then(res => res.json()).then( data => {
             if (data === 'duplicate') {
-                console.log('duplicate username');
+                err('Username Already Taken');
             }
             else if (data == 'invalid') {
-                console.log('invalid input');
+                err('Invalid Input');
             }
             else {
-                console.log('successful sign up');
                 setUserData(data);
                 navigate('/reading');
             }
@@ -47,7 +47,13 @@ const SignUp = ({setUserData}) => {
     };
     return (
         <div className='border-2 rounded-lg border-white w-96 h-80'>
-            <div className='text-3xl my-2 ml-4 font-semibold'>Sign Up</div>
+            <div className='flex flex-row'>
+                <div className='text-3xl my-2 ml-4 font-semibold'>Sign Up</div>
+                <div className='flex flex-grow justify-end pt-2 pr-2'>
+                    <div onClick = {swap} className='border-2 border-black bg-purple-800 hover:bg-purple-600 rounded-xl p-2 cursor-pointer'>Returning User</div>
+                </div>
+            </div>
+            
             <div className='text-center'>
                 <div>
                     <div className='text-xl'>Name:</div>
@@ -64,7 +70,7 @@ const SignUp = ({setUserData}) => {
                 <div className='flex justify-center mt-4 space-x-4'>
                     <div onClick={() => clear()} className='cursor-pointer border-2 border-black rounded-lg py-2 px-4 bg-red-500 hover:bg-red-600 '>Clear</div>    
                     <div onClick={() => submit()} className='cursor-pointer border-2 border-black rounded-lg py-2 px-4 bg-emerald-500 hover:bg-emerald-600 '>Submit</div>    
-                </div>                 
+                </div>             
             </div>                    
         </div>
     )
