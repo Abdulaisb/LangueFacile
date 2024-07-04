@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { apiURL } from './config';
 import { useNavigate } from 'react-router-dom';
+apiURL = process.env.APIURL;
 const SignUp = ({setUserData, swap, err}) => {
     const navigate = useNavigate();
     const [user,setUser] = useState("");
