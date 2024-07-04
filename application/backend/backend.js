@@ -1,21 +1,24 @@
 //Setup
 import express from "express";
-import { PORT, mongodbURL } from "./config.js";
 import mongoose from "mongoose";
 import cors from 'cors'
+import dotenv from 'dotenv'
+dotenv.config();
+/////////////////////////
 
+////////////////////////
 const ObjectId = mongoose.Types.ObjectId;
 const app = express();
 app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
 //Listening
-app.listen(PORT, () => {
-    console.log(`App is listening to port: ${PORT}`)
+app.listen(process.env.PORT, () => {
+    console.log(`App is listening to port: ${process.env.PORT}`)
 })
 //Database Conenction
 mongoose
-    .connect(mongodbURL, {dbName: 'langDB'})
+    .connect(process.env.MONGODBURL, {dbName: 'langDB'})
     .then(() => {
         console.log('App connected to database')
     })
