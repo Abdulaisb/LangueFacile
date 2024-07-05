@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {Route, Routes, Navigate} from 'react-router-dom'
 import { useState } from 'react';
-import Reader from './reader.jsx';
+import Reader from './read.jsx';
 import Navbar  from './navbar.jsx';
 import './index.css';
 import Flashcards from './flashcards.jsx';

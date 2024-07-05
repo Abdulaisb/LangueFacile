@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-apiURL = process.env.APIURL;
+
+const apiURL = import.meta.env.VITE_APIURL;
 
 const Login = ({setUserData, swap, err}) => {
     const navigate = useNavigate();
