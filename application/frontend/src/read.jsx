@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import gear from './images/gear_icon.jpg'
 import Sentence from './sentence';
 import ShelfItem from './shelfItem';
-apiURL = process.env.APIURL;
+
+const apiURL = import.meta.env.VITE_APIURL;
 
 const Reader = ({userData}) => {
   //Article Title

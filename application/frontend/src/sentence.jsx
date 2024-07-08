@@ -3,7 +3,7 @@ import React from 'react'
 const Sentence = ({sentence1, sentence2, on, lit, litToggle}) => {
     
     return (
-        <div onClick = {litToggle} className= {`hover:bg-gray-500 p-4 rounded-lg cursor-pointer ${lit ? 'text-pink-400 ' : 'text-white'}`}
+        <div onClick = {litToggle} className= {`hover:bg-gray-500 p-4 rounded-lg cursor-pointer mt-4 ${lit ? 'text-pink-400 font-bold border-2 border-white' : 'text-white'}`}
         >
             <div className=''>
                 {sentence1}    

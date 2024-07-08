@@ -1,9 +1,10 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-apiURL = process.env.APIURL;
+
+const apiURL = import.meta.env.VITE_APIURL;
 
 const Login = ({setUserData, swap, err}) => {
     const navigate = useNavigate();
@@ -52,7 +53,7 @@ const Login = ({setUserData, swap, err}) => {
             <div className='flex flex-row'>
                 <div className='text-3xl my-2 ml-4 font-semibold'>Log in</div>
                 <div className='flex flex-grow justify-end pt-2 pr-2'>
-                    <div onClick = {swap} className='border-2 border-black bg-purple-800 hover:bg-purple-600 rounded-xl p-2 cursor-pointer'>Existing User</div>
+                    <div onClick = {swap} className='border-2 border-black bg-purple-800 hover:bg-purple-600 rounded-xl p-2 cursor-pointer'>New User</div>
                 </div>
             </div>
             <div className='text-center'>                      

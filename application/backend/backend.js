@@ -4,12 +4,14 @@ import mongoose from "mongoose";
 import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config();
-/////////////////////////
 
-////////////////////////
 const ObjectId = mongoose.Types.ObjectId;
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 // Middleware to parse JSON bodies
 app.use(express.json());
 //Listening
