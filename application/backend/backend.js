@@ -101,7 +101,7 @@ app.post('/signup', async(req,res) => {
             highlighting : []
         });
         input.save();
-        res.json('good');
+        res.json(input);
     }    
 });
 app.post('/login', async(req,res) => {
