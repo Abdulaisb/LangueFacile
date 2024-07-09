@@ -1,7 +1,10 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { apiURL } from './config';
 import { useNavigate } from 'react-router-dom';
+
+
+const apiURL = import.meta.env.VITE_APIURL;
+
 const SignUp = ({setUserData, swap, err}) => {
     const navigate = useNavigate();
     const [user,setUser] = useState("");
