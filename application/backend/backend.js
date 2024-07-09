@@ -85,6 +85,7 @@ app.post('/set_article', async(req,res) => {
 });
 //Authentication
 app.post('/signup', async(req,res) => {
+    console.log('sign up');
     const {name, user, password} = req.body;
     if (await User.findOne({'username': user}).exec() !== null) {
         res.json('duplicate');
@@ -104,6 +105,7 @@ app.post('/signup', async(req,res) => {
     }    
 });
 app.post('/login', async(req,res) => {
+    console.log('log in');
     const {user, password} = req.body;
     if (user === "" || password === "") {
         res.json('invalid');
