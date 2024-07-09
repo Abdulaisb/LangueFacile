@@ -1,10 +1,9 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { apiURL } from './config';
 import gear from './images/gear_icon.jpg'
 import Sentence from './sentence';
 import ShelfItem from './shelfItem';
-
-const apiURL = import.meta.env.VITE_APIURL;
 
 const Reader = ({userData}) => {
   //Article Title
@@ -63,7 +62,6 @@ const Reader = ({userData}) => {
       res => res.json() 
     ).then(
       data => {
-        //console.log('server message: ', data) 
         updateView(data);
       }
     )
@@ -81,7 +79,6 @@ const Reader = ({userData}) => {
     }).then(
       res => res.json() 
     ).then( data => {
-        console.log('set article')
         updateView(data);
       })
   };
@@ -108,7 +105,7 @@ const Reader = ({userData}) => {
       lit : lit
     }  
     fetch(apiURL + '/save_article', {
-        method : 'PUT',
+        method : 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
     }).then(res => res.json()).then(res => {
@@ -121,7 +118,7 @@ const Reader = ({userData}) => {
       articleID : articleID
     }  
     fetch(apiURL + '/unsave_article', {
-        method : 'PUT',
+        method : 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
     }).then(res => res.json()).then(res => {
@@ -137,7 +134,6 @@ const Reader = ({userData}) => {
     }).then(res => res.json().then( data => {
       setShelf((data));
     }))
-    console.log('shelf: ', shelf)
   };
   if (loading) {
       return (<div className='h-ah bg-gray-500'></div>)

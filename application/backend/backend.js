@@ -1,24 +1,21 @@
-//Setup
 import express from "express";
 import mongoose from "mongoose";
 import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config();
 
-const ObjectId = mongoose.Types.ObjectId;
 const app = express();
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-// Middleware to parse JSON bodies
-app.use(express.json());
-//Listening
+
+app.use(express.json()); // Middleware to parse JSON bodies
+
 app.listen(process.env.PORT, () => {
     console.log(`App is listening to port: ${process.env.PORT}`)
 })
-//Database Conenction
 mongoose
     .connect(process.env.MONGODBURL, {dbName: 'langDB'})
     .then(() => {
@@ -27,7 +24,8 @@ mongoose
     .catch((error) => {
         console.log(error)
     });
-//Article Model
+//Models
+const ObjectId = mongoose.Types.ObjectId;
 const Article = mongoose.model('Article', {
     title: String,
     lang1: String,
@@ -36,20 +34,13 @@ const Article = mongoose.model('Article', {
     text2: [String],
     link: String
 });
-//User Model
 const User = mongoose.model('User', {
     username: String,
     name: String,
     password: String,
     highlighting: [{id:String, lit:[Number]}]
 });
-//API connection verification
-app.get('/connect', async(req, res) =>
-{
-    const msg = {'message':'Backend Connected'};
-    res.json(msg);
-});
-//Gets first article in database
+//Article Queries
 app.get('/article', async(req,res) => {
     try {
         const article = await Article.findOne({}).exec();
@@ -59,7 +50,6 @@ app.get('/article', async(req,res) => {
         console.error(err)
     }
 });
-//Gets random article
 app.post('/random_article', async(req,res) => {
     try {
         let cnt = await Article.countDocuments();
@@ -80,7 +70,6 @@ app.post('/random_article', async(req,res) => {
         console.error(err)
     }
 });
-//Sets specific article
 app.post('/set_article', async(req,res) => {
     const {articleID, username} = req.body;
     const article = await Article.findById(articleID).exec();
@@ -94,8 +83,8 @@ app.post('/set_article', async(req,res) => {
     }
     res.json({article: article, lit : lighting});
 });
-//Handles Sign up
-app.put('/signup', async(req,res) => {
+//Authentication
+app.post('/signup', async(req,res) => {
     const {name, user, password} = req.body;
     if (await User.findOne({'username': user}).exec() !== null) {
         res.json('duplicate');
@@ -114,8 +103,7 @@ app.put('/signup', async(req,res) => {
         res.json('good');
     }    
 });
-//Handles Log In
-app.put('/login', async(req,res) => {
+app.post('/login', async(req,res) => {
     const {user, password} = req.body;
     if (user === "" || password === "") {
         res.json('invalid');
@@ -133,8 +121,8 @@ app.put('/login', async(req,res) => {
         }    
     }    
 });
-//Saves article
-app.put('/save_article', async(req,res) => {
+//User's shelf
+app.post('/save_article', async(req,res) => {
     const {username, articleID, lit} = req.body;
     let user = await User.findOne({username : username}).exec();
     let found = false;
@@ -152,21 +140,18 @@ app.put('/save_article', async(req,res) => {
     await user.save();
     res.json('article saved')
 });
-//Removes article from user's shelf
-app.put('/unsave_article', async(req,res) => {
+app.post('/unsave_article', async(req,res) => {
     const {username, articleID} = req.body;
     let user = await User.findOne({username : username}).exec();
     user.highlighting = user.highlighting.filter(item => item.id !== articleID);
     await user.save();
     res.json('article unsaved')
 });
-//Deletes article
-app.put('/delete_article', async(req,res) => {
+app.post('/delete_article', async(req,res) => {
     const {username, articleID, lit} = req.body;
     let user = await User.findOne({username : username}).exec();
     //TODO
 });
-//Gets a users saved articles
 app.post('/saved_articles', async(req,res) => {
     const {username} = req.body;
     const user = await User.findOne({username : username}).exec();

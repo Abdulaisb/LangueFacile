@@ -27,7 +27,7 @@ const Login = ({setUserData, swap, err}) => {
             'password' : pass
         }
         fetch(apiURL + '/login', {
-            method : 'PUT',
+            method : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },

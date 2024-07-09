@@ -30,7 +30,7 @@ const SignUp = ({setUserData, swap, err}) => {
             'password' : pass
         }
         fetch(apiURL + '/signup', {
-            method : 'PUT',
+            method : 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
