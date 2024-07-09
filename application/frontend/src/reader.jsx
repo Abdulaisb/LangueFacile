@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { apiURL } from './config';
 import gear from './images/gear_icon.jpg'
 import Sentence from './sentence';
 import ShelfItem from './shelfItem';
+const apiURL = import.meta.env.VITE_APIURL;
 
 const Reader = ({userData}) => {
   //Article Title
