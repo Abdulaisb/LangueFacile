@@ -44,7 +44,7 @@ const Login = ({setUserData, swap, err}) => {
             }
             else {
                 setUserData(data);
-                navigate('/reading');
+                navigate('/');
             }
         })
     };
@@ -53,7 +53,7 @@ const Login = ({setUserData, swap, err}) => {
             <div className='flex flex-row'>
                 <div className='text-3xl my-2 ml-4 font-semibold'>Log in</div>
                 <div className='flex flex-grow justify-end pt-2 pr-2'>
-                    <div onClick = {swap} className='border-2 border-black bg-purple-800 hover:bg-purple-600 rounded-xl p-2 cursor-pointer'>New User</div>
+                    <div onClick = {swap} className='border-2 border-black bg-purple-800 hover:bg-purple-600 rounded-xl p-2 cursor-pointer text-white'>New User</div>
                 </div>
             </div>
             <div className='text-center'>                      

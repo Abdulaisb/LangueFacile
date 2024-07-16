@@ -39,12 +39,12 @@ const SignUp = ({setUserData, swap, err}) => {
             if (data === 'duplicate') {
                 err('Username Already Taken');
             }
-            else if (data == 'invalid') {
+            else if (data === 'invalid') {
                 err('Invalid Input');
             }
             else {
                 setUserData(data);
-                navigate('/reading');
+                navigate('/');
             }
         })
     };

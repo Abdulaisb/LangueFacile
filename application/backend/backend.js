@@ -70,6 +70,20 @@ app.post('/random_article', async(req,res) => {
         console.error(err)
     }
 });
+app.post('/last_article', async(req,res) => {
+    //need article id from user
+    const {articleID} = req.body;
+    const article = await Article.findById(articleID).exec();
+    const user = await User.findOne({username: "guest"}).exec();
+    let lighting = [];
+        for (const art of user.highlighting) {
+            if (((new ObjectId(art.id))).equals(article._id)) {
+                lighting = art.lit;
+                break;
+            } 
+        }
+    res.json({article: article, lit : lighting});
+});
 app.post('/set_article', async(req,res) => {
     const {articleID, username} = req.body;
     const article = await Article.findById(articleID).exec();
@@ -84,8 +98,11 @@ app.post('/set_article', async(req,res) => {
     res.json({article: article, lit : lighting});
 });
 //Authentication
+app.get('/guest', async(req,res) => {
+    const userData = await User.findOne({'username': 'guest'}).exec();
+    res.json(userData);
+});
 app.post('/signup', async(req,res) => {
-    console.log('sign up');
     const {name, user, password} = req.body;
     if (await User.findOne({'username': user}).exec() !== null) {
         res.json('duplicate');
@@ -105,7 +122,6 @@ app.post('/signup', async(req,res) => {
     }    
 });
 app.post('/login', async(req,res) => {
-    console.log('log in');
     const {user, password} = req.body;
     if (user === "" || password === "") {
         res.json('invalid');

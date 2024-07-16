@@ -30,7 +30,12 @@ const Reader = ({userData}) => {
   const [loading, setLoading] = useState(true);
   //Whenever component is mounted
   useEffect(() => {    
-    randomArticle();
+    if (userData.highlighting.length === 0) {
+      randomArticle();
+    }
+    else {
+      lastArticle();
+    }
   }, []);
   //Sets values
   const updateView = (data) => {
@@ -48,7 +53,7 @@ const Reader = ({userData}) => {
         setHighlit(lighting);
         updateShelf();
         setLoading(false);
-        document.getElementById('reading-box').scrollTop = 0;
+        // document.getElementById('reading-box').scrollTop = 0;
   };
   //Generate Random Article
   const randomArticle = () => {
@@ -65,6 +70,22 @@ const Reader = ({userData}) => {
         updateView(data);
       }
     )
+  };
+  const lastArticle = () => {
+    console.log(userData.highlighting);
+    fetch(apiURL + '/last_article', {
+      method : 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({articleID : userData.highlighting[userData.highlighting.length - 1].id})
+  }).then(
+    res => res.json() 
+  ).then(
+    data => {
+      updateView(data);
+    }
+  )
   };
   //Specific Article
   const setArticle = (articleID) => {
@@ -155,7 +176,7 @@ const Reader = ({userData}) => {
                 Save Article
               </button>
               <div>
-                Language: {lang1}
+                Language: Francais
               </div>
               <a href = {articleURL} target='_blank' className='w-8/12 py-2'>
                 <div className='border-4 border-black rounded-2xl hover:bg-cyan-600 py-2' >
