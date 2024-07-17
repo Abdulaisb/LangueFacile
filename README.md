@@ -4,7 +4,7 @@ Language Learning Application by Abdulai Bah
 publicly hosted at [languefacile.onrender.com](https://languefacile.onrender.com/)
 
 ## Notes
-- Login in the top right to access the full range of features
+- User must be logged in to access the full range of features
 - The frontend is optimized for a 15 inch display and may appear unexpectedly on smaller screens
 - Highlighted sentences are only saved to your account once you click **Save Mark-Up**
 - Flashcard page is incomplete
