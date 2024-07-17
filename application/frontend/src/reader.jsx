@@ -164,7 +164,7 @@ const Reader = ({userData}) => {
 
   return (
     <>
-      <div className='flex text-white h-ah opacity-0 animate-fade-3'>        
+      <div className='flex text-white h-ah '>        
         <div className='flex-none w-1/6 bg-gray-500 flex flex-col items-center text-center space-y-10 '>
             <div className='flex flex-col h-5/6 space-y-10 pt-10 items-center w-full justify-center'>
               
@@ -192,7 +192,7 @@ const Reader = ({userData}) => {
             </div>            
           </div>
 
-          <div className = ' bg-gray-700 pt-10'>          
+          <div className = ' bg-gray-700 pt-10 opacity-0 animate-fade-3'>          
             <div id = 'reading-box' className='bg-gray-600 border-4 border-black rounded w-4/6 h-5/6 m-auto overflow-auto p-5'>
               <div className='text-center text-3xl font-semibold '>{title}</div>
               <br></br>
