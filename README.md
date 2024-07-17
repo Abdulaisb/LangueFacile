@@ -8,6 +8,7 @@ publicly hosted at [languefacile.onrender.com](https://languefacile.onrender.com
 - The frontend is optimized for a 15 inch display and may appear unexpectedly on smaller screens
 - Highlighted sentences are only saved to your account once you click **Save Mark-Up**
 - Flashcard page is incomplete
+- Refreshing page automatically logs you out
 
 ## Motivation
 The goal was to create a product that: 
