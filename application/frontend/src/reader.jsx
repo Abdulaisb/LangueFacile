@@ -30,13 +30,15 @@ const Reader = ({userData}) => {
   const [loading, setLoading] = useState(true);
   //Whenever component is mounted
   useEffect(() => {    
-    if (userData.highlighting.length === 0) {
-      randomArticle();
-    }
-    else {
-      lastArticle();
-    }
-  }, []);
+    if (userData) {
+      if (userData.highlighting.length === 0) {
+        randomArticle();
+      }
+      else {
+        lastArticle();
+      }
+    }    
+  }, [userData]);
   //Sets values
   const updateView = (data) => {
     setTitle(data.article.title);
@@ -164,7 +166,7 @@ const Reader = ({userData}) => {
     <>
       <div className='flex text-white h-ah animate-fade-3'>        
         <div className='flex-none w-1/6 bg-gray-500 flex flex-col items-center text-center space-y-10 '>
-            <div className='flex flex-col h-5/6 space-y-10 pt-10 items-center w-full'>
+            <div className='flex flex-col h-5/6 space-y-10 pt-10 items-center w-full justify-center'>
               
               <button onClick = {englishToggle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
                 Toggle Translation
@@ -172,9 +174,9 @@ const Reader = ({userData}) => {
               <button onClick = {randomArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
                 New Article
               </button>
-              <button onClick = {saveArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
+              {userData.username !== 'guest' && (<button onClick = {saveArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
                 Save Mark-Up
-              </button>
+              </button>)}
               <div>
                 Language: Francais
               </div>
@@ -219,6 +221,7 @@ const Reader = ({userData}) => {
                         articleID = {art.id}
                         unsave = {() => unsaveArticle(art.id)}
                         setArticle = {() => setArticle(art.id)}
+                        guest = {userData.username === 'guest'}
                       />
                   )}
                 </div>
