@@ -162,7 +162,7 @@ const Reader = ({userData}) => {
 
   return (
     <>
-      <div className='flex text-white h-ah'>        
+      <div className='flex text-white h-ah animate-fade-3'>        
         <div className='flex-none w-1/6 bg-gray-500 flex flex-col items-center text-center space-y-10 '>
             <div className='flex flex-col h-5/6 space-y-10 pt-10 items-center w-full'>
               
@@ -173,7 +173,7 @@ const Reader = ({userData}) => {
                 New Article
               </button>
               <button onClick = {saveArticle} className='border-4 border-black rounded-2xl w-8/12 py-2 hover:bg-cyan-600'>
-                Save Article
+                Save Mark-Up
               </button>
               <div>
                 Language: Francais

@@ -25,7 +25,7 @@ const Auth  = ({setUserData}) => {
     return (
         <div className='flex h-screen'>
             <div className='flex-none w-full bg-gray-500 flex justify-center pt-20'>                
-                <div className='flex flex-col items-center'>
+                <div className='flex flex-col items-center opacity-0 animate-fade-left'>
                     {(signup) && (<SignUp err = {setMsg} swap = {() => setSignup(false)} setUserData = {setUserData}/>)}                
                     {(!signup) && (<Login err = {setMsg} swap = {() => setSignup(true)} setUserData = {setUserData}/>)}
                     <div className='bg-blue-800 hover:bg-blue-600 w-11/12 rounded-lg text-center text-white mt-4 border-2 border-white py-2 cursor-pointer' onClick={guestLogin}>
