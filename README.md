@@ -1,7 +1,8 @@
 # Debutant
 Language Learning Application by Abdulai Bah
 
-publicly hosted at [languefacile.onrender.com](https://languefacile.onrender.com/)
+Prototype publicly hosted at [languefacile.onrender.com](https://languefacile.onrender.com/) \
+Note that backend hosting may take a few minutes to spin up leading to unexpected outcomes when first visiting the site
 
 ## Notes
 - User must be logged in to access the full range of features
